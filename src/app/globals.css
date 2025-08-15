@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Login page background grid images: Replace /public/bg1.jpg, /bg2.jpg, etc. with your movie images for best effect. */
+
+/* Slider Text Animations */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRightWithScale {
+  0% {
+    transform: translateX(200px) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRightWithBounce {
+  0% {
+    transform: translateX(150px) translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInFromRight 1s ease-out;
+}
+
+.slide-in-right-scale {
+  animation: slideInFromRightWithScale 1s ease-out;
+}
+
+.slide-in-right-bounce {
+  animation: slideInFromRightWithBounce 1s ease-out;
+}
