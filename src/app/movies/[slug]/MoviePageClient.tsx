@@ -82,6 +82,7 @@ const featuredMovies = [
 // Copy of the films array from home/page.tsx
 const films = [
   {
+    slug: 'tomar-amar-google-meet',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Tomar-Amar-Google-Meet-Bengali-Movie.jpg",
     title: "Tomar Amar Google Meet",
     genre: "Romance",
@@ -90,6 +91,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'jhalmuri-junction',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Jhalmuri-Junction-Bengali-Movie.jpg",
     title: "Jhalmuri Junction",
     genre: "Romance",
@@ -98,6 +100,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'facebook-e-first-love',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Facebook-first-Love-Bengali-Movie.jpg",
     title: "Facebook-e First Love",
     genre: "Romance",
@@ -106,6 +109,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'chuti-bela',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Chuti-Bela-Bengali-movie.jpg",
     title: "Chuti Bela",
     genre: "Romance",
@@ -114,6 +118,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'rong-pencil',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Rang-Pencil-Bengali-movie-Blueberries.jpg",
     title: "Rong Pencil",
     genre: "Romance",
@@ -122,6 +127,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'ektu-prem-ektu-chatpata',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Ektu-Prem-Ektu-Chatpata-Bangla-Natok-1.jpg",
     title: "Ektu Prem, Ektu Chatpata",
     genre: "Romance",
@@ -130,6 +136,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'crush-e-click',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Bengali-Film-2025-Upcoming-1.jpg",
     title: "Crush-e Click",
     genre: "Romance",
@@ -138,6 +145,7 @@ const films = [
     tags: ["45 Mins Movie", "Romance"]
   },
   {
+    slug: 'subscription-movie',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/lY1rOjipVwHWdkABzOXTUDKCWmn.jpg.jpg",
     title: "Subscription Movie",
     genre: "Premium",
@@ -150,11 +158,13 @@ const films = [
 // Add musicVideos array from home page
 const musicVideos = [
   {
+    slug: 'bondhu-dekha-hobe',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Bandhu-Dekha-Hobe-The-Red-file-2024-Music-video-Song.jpg",
     title: "Bondhu Dekha Hobe",
     genre: "Music Video",
   },
   {
+    slug: 'tui-je-amar-noy',
     src: "https://blueberriesfilms.com/wp-content/uploads/2025/07/Tui-Je-Amar-Noy-The-Red-Files-2024-Music-Video-1.jpg",
     title: "Tui Je Amar Noy",
     genre: "Music Video",
@@ -169,7 +179,21 @@ export default function MoviePageClient({ slug }: { slug: string }) {
   const [showFull, setShowFull] = useState(false);
   const [showGoTop, setShowGoTop] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
-  const [playerMovie, setPlayerMovie] = useState(featuredMovies.find(m => m.slug === slug));
+  const [playerMovie, setPlayerMovie] = useState(() => {
+    // First try to find in featuredMovies
+    const featured = featuredMovies.find(m => m.slug === slug);
+    if (featured) return featured;
+    
+    // Then try to find in films
+    const film = films.find(f => f.slug === slug);
+    if (film) return film;
+    
+    // Then try to find in musicVideos
+    const musicVideo = musicVideos.find(m => m.slug === slug);
+    if (musicVideo) return musicVideo;
+    
+    return null;
+  });
   
   useEffect(() => {
     const onScroll = () => {
@@ -201,7 +225,7 @@ export default function MoviePageClient({ slug }: { slug: string }) {
             <span className="text-white/80 font-semibold text-lg mb-2 block">{playerMovie.genre}</span>
             <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg">{playerMovie.title}</h1>
             <div className="text-white/90 text-lg mb-4">
-              Genre: {playerMovie.tags?.join(', ')} | Language: Bengali | Duration: {playerMovie.duration} Status: Upcoming | Studio: Blueberries Originals
+              Genre: {playerMovie.tags?.join(', ')} | Language: Bengali | Duration: {playerMovie.duration} | Status: Upcoming | Studio: Blueberries Originals
             </div>
             <div className={`text-white/90 text-base max-w-2xl leading-relaxed mb-4 ${showFull ? '' : 'line-clamp-2'}`}
               style={!showFull ? { display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' } : {}}>
@@ -210,7 +234,7 @@ export default function MoviePageClient({ slug }: { slug: string }) {
             {!showFull && (
               <button
                 className="bg-white/10 hover:bg-white/20 text-white font-semibold px-4 py-2 rounded shadow mb-4 transition"
-                onClick={() => setShowPlayer(true)}
+                onClick={() => setShowFull(true)}
               >
                 Read More
               </button>
@@ -228,7 +252,7 @@ export default function MoviePageClient({ slug }: { slug: string }) {
               <button
                 type="button"
                 className="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white text-xl font-bold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 w-fit transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400 cursor-pointer"
-                onClick={() => { setPlayerMovie(playerMovie); setShowPlayer(true); }}
+                onClick={() => { setShowPlayer(true); }}
               >
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="14" cy="14" r="13" stroke="white" strokeWidth="2" />
@@ -274,7 +298,7 @@ export default function MoviePageClient({ slug }: { slug: string }) {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Recommended</h2>
           <div className="flex gap-4 flex-wrap justify-start items-start pb-4">
             {films
-              .filter(f => f.title !== "The Red Files" && toSlug(f.title) !== slug && f.title !== "Subscription Movie")
+              .filter(f => f.title !== "The Red Files" && f.slug !== slug && f.title !== "Subscription Movie")
               .map((film) => (
                 <div
                   key={film.title}
@@ -421,7 +445,7 @@ export default function MoviePageClient({ slug }: { slug: string }) {
                       +
                     </button>
                     <a
-                      href={`/music-videos/${toSlug(video.title)}`}
+                      href={`/music-videos/${video.slug}`}
                       className="flex-1 bg-blue-400 hover:bg-blue-500 text-zinc-900 text-xs font-bold py-1 rounded-lg transition shadow-lg text-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
                       tabIndex={0}
                       role="button"
@@ -452,4 +476,4 @@ export default function MoviePageClient({ slug }: { slug: string }) {
       <Player open={showPlayer} onClose={() => setShowPlayer(false)} movie={playerMovie} />
     </>
   );
-} 
+}

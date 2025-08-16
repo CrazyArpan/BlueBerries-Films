@@ -4,7 +4,27 @@ import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 import { FaExpand } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 
-export default function Player({ open, onClose, movie, showFullPageButton = true, fullPage = false }: { open: boolean; onClose: () => void; movie?: { src: string; title: string; genre?: string; duration?: string; description?: string; tags?: string[]; slug?: string }, showFullPageButton?: boolean, fullPage?: boolean }) {
+export default function Player({
+  open,
+  onClose,
+  movie,
+  showFullPageButton = true,
+  fullPage = false,
+}: {
+  open: boolean;
+  onClose: () => void;
+  movie?: {
+    src: string;
+    title: string;
+    genre?: string;
+    duration?: string;
+    description?: string;
+    tags?: string[];
+    slug?: string;
+  };
+  showFullPageButton?: boolean;
+  fullPage?: boolean;
+}) {
   // All hooks must be at the top level
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -30,12 +50,14 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
     const onFullscreenChange = () => {
       setShowControls(true);
     };
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, [fullPage]);
 
   // Only auto-hide controls in fullscreen and when playing (fullPage only)
-  const isFullscreen = typeof document !== 'undefined' && document.fullscreenElement;
+  const isFullscreen =
+    typeof document !== "undefined" && document.fullscreenElement;
   const shouldAutoHide = fullPage && isFullscreen && playing;
 
   useEffect(() => {
@@ -72,16 +94,21 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
           />
         )}
         {/* Overlay for darkening */}
-        <div className="absolute inset-0 bg-black/80 pointer-events-none select-none" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-black/80 pointer-events-none select-none"
+          aria-hidden="true"
+        />
         {/* Movie title */}
         {movie?.title && (
-          <h2 className="z-10 text-white text-3xl font-bold mb-6 text-center drop-shadow-lg mt-8">{movie.title}</h2>
+          <h2 className="z-10 text-white text-3xl font-bold mb-6 text-center drop-shadow-lg mt-8">
+            {movie.title}
+          </h2>
         )}
         {/* Video area - edge-to-edge, no rounded corners or shadow */}
         <div
           ref={videoAreaRef}
           className="w-full max-w-5xl aspect-video bg-zinc-800 flex items-center justify-center mb-4 border border-zinc-700 z-10 cursor-pointer"
-          style={{ borderRadius: 0, boxShadow: 'none' }}
+          style={{ borderRadius: 0, boxShadow: "none" }}
           title="Click to toggle fullscreen"
         >
           <video
@@ -93,7 +120,8 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               if (videoRef.current) setDuration(videoRef.current.duration);
             }}
             onTimeUpdate={() => {
-              if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
+              if (videoRef.current)
+                setCurrentTime(videoRef.current.currentTime);
             }}
             onEnded={() => router.push("/")}
             autoPlay={playing}
@@ -102,7 +130,7 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
         </div>
         {/* Controls - auto-hide in fullscreen when playing */}
         <div
-          className={`w-full max-w-3xl flex flex-col gap-4 items-center z-10 transition-opacity duration-300 ${shouldAutoHide && !showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+          className={`w-full max-w-3xl flex flex-col gap-4 items-center z-10 transition-opacity duration-300 ${shouldAutoHide && !showControls ? "opacity-0 pointer-events-none" : "opacity-100"}`}
         >
           {/* Timeline slider */}
           <input
@@ -112,7 +140,7 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
             max={duration}
             step={0.1}
             value={currentTime}
-            onChange={e => {
+            onChange={(e) => {
               const time = Number(e.target.value);
               setCurrentTime(time);
               if (videoRef.current) videoRef.current.currentTime = time;
@@ -125,7 +153,10 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               aria-label="Backward"
               onClick={() => {
                 if (videoRef.current) {
-                  videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                  videoRef.current.currentTime = Math.max(
+                    0,
+                    videoRef.current.currentTime - 10,
+                  );
                   setCurrentTime(videoRef.current.currentTime);
                 }
               }}
@@ -154,7 +185,10 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               aria-label="Forward"
               onClick={() => {
                 if (videoRef.current) {
-                  videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                  videoRef.current.currentTime = Math.min(
+                    duration,
+                    videoRef.current.currentTime + 10,
+                  );
                   setCurrentTime(videoRef.current.currentTime);
                 }
               }}
@@ -176,7 +210,6 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
             {formatTime(currentTime)} / {formatTime(duration)}
           </div>
         </div>
-
       </div>
     );
   }
@@ -194,7 +227,10 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
           />
         )}
         {/* Overlay for darkening */}
-        <div className="absolute inset-0 bg-black/60 pointer-events-none select-none" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-black/60 pointer-events-none select-none"
+          aria-hidden="true"
+        />
         {/* Close button */}
         <button
           onClick={onClose}
@@ -217,7 +253,9 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
         )}
         {/* Movie title */}
         {movie?.title && (
-          <h2 className="z-10 text-white text-2xl font-bold mb-4 text-center drop-shadow-lg">{movie.title}</h2>
+          <h2 className="z-10 text-white text-2xl font-bold mb-4 text-center drop-shadow-lg">
+            {movie.title}
+          </h2>
         )}
         {/* Placeholder for video - this is what will go fullscreen */}
         <div
@@ -235,7 +273,8 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               if (videoRef.current) setDuration(videoRef.current.duration);
             }}
             onTimeUpdate={() => {
-              if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
+              if (videoRef.current)
+                setCurrentTime(videoRef.current.currentTime);
             }}
             onEnded={() => router.push("/")}
             autoPlay={playing}
@@ -252,7 +291,7 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
             max={duration}
             step={0.1}
             value={currentTime}
-            onChange={e => {
+            onChange={(e) => {
               const time = Number(e.target.value);
               setCurrentTime(time);
               if (videoRef.current) videoRef.current.currentTime = time;
@@ -265,7 +304,10 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               aria-label="Backward"
               onClick={() => {
                 if (videoRef.current) {
-                  videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                  videoRef.current.currentTime = Math.max(
+                    0,
+                    videoRef.current.currentTime - 10,
+                  );
                   setCurrentTime(videoRef.current.currentTime);
                 }
               }}
@@ -294,7 +336,10 @@ export default function Player({ open, onClose, movie, showFullPageButton = true
               aria-label="Forward"
               onClick={() => {
                 if (videoRef.current) {
-                  videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                  videoRef.current.currentTime = Math.min(
+                    duration,
+                    videoRef.current.currentTime + 10,
+                  );
                   setCurrentTime(videoRef.current.currentTime);
                 }
               }}
@@ -328,4 +373,5 @@ function formatTime(sec: number) {
   const s = Math.floor(sec % 60)
     .toString()
     .padStart(2, "0");
-  return `${m}:${s}`
+  return `${m}:${s}`;
+}
