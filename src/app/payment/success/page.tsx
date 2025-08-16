@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaDownload, FaPlay } from "react-icons/fa";
 import Link from "next/link";
-import BackToHomeButton from "../../components/BackToHomeButton";
+
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
